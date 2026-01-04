@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bollywood Dumb Charades Deck</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #f59e0b;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at 20% 20%, rgba(245,158,11,0.12), transparent 25%),
+                  radial-gradient(circle at 80% 10%, rgba(99,102,241,0.12), transparent 25%),
+                  radial-gradient(circle at 50% 80%, rgba(14,165,233,0.12), transparent 25%),
+                  var(--bg);
+      color: var(--text);
+      padding: 24px;
+    }
+    .app {
+      width: min(420px, 100%);
+      text-align: center;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 28px;
+      letter-spacing: 0.2px;
+    }
+    p {
+      margin: 0 0 20px;
+      color: var(--muted);
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 32px 24px;
+      min-height: 140px;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+    .card:not(.empty) {
+      cursor: pointer;
+    }
+    .card:hover:not(.empty) {
+      transform: translateY(-4px);
+      box-shadow: 0 26px 50px rgba(0,0,0,0.35);
+    }
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .meta {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      color: #111827;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 14px 30px rgba(249,115,22,0.35);
+      transition: transform 100ms ease, box-shadow 100ms ease;
+    }
+    button:active {
+      transform: translateY(1px);
+      box-shadow: 0 10px 24px rgba(249,115,22,0.28);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+    .small {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="badge">Bollywood Dumb Charades Deck</div>
+    <h1>Draw a movie card</h1>
+    <p>Click the button to pull a random movie. Once drawn, it won't repeat.</p>
+
+    <div id="card" class="card empty">
+      <div class="title" id="card-title">Shuffle &amp; Draw</div>
+      <div class="meta" id="card-meta"></div>
+    </div>
+
+    <button id="draw">Draw next movie</button>
+    <div class="small" id="remaining"></div>
+  </div>
+
+  <script>
+    const movies = [
+      "3 Idiots",
+      "Dilwale Dulhania Le Jayenge",
+      "Lagaan",
+      "Andaz Apna Apna",
+      "Sholay",
+      "Zindagi Na Milegi Dobara",
+      "Queen",
+      "Kabhi Khushi Kabhie Gham",
+      "Golmaal",
+      "Chupke Chupke",
+      "Taare Zameen Par",
+      "Barfi!",
+      "Swades",
+      "Chak De! India",
+      "Gully Boy",
+      "Wake Up Sid",
+      "Hum Aapke Hain Koun..!",
+      "Bajirao Mastani",
+      "Koi... Mil Gaya",
+      "Kabir Singh",
+      "Yeh Jawaani Hai Deewani",
+      "Kal Ho Naa Ho",
+      "Rockstar",
+      "PK",
+      "Kahaani",
+      "Dil Chahta Hai",
+      "Munna Bhai M.B.B.S.",
+      "Hera Pheri",
+      "Dangal",
+      "Piku",
+      "Tanu Weds Manu",
+      "Airlift",
+      "OMG: Oh My God!",
+      "Bhool Bhulaiyaa",
+      "Chennai Express",
+      "Veer-Zaara",
+      "Veere Di Wedding",
+      "The Lunchbox",
+      "Badhaai Ho",
+      "Andhadhun"
+    ];
+
+    let deck = [];
+
+    const cardEl = document.getElementById('card');
+    const titleEl = document.getElementById('card-title');
+    const metaEl = document.getElementById('card-meta');
+    const remainingEl = document.getElementById('remaining');
+    const drawBtn = document.getElementById('draw');
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function resetDeck() {
+      deck = shuffle([...movies]);
+      updateRemaining();
+      titleEl.textContent = 'Shuffle & Draw';
+      metaEl.textContent = '';
+      cardEl.classList.add('empty');
+    }
+
+    function updateRemaining() {
+      remainingEl.textContent = `${deck.length} movie${deck.length === 1 ? '' : 's'} remaining`;
+    }
+
+    function drawCard() {
+      if (deck.length === 0) {
+        resetDeck();
+      }
+      const movie = deck.pop();
+      titleEl.textContent = movie;
+      metaEl.textContent = `Drawn card ${movies.length - deck.length}/${movies.length}`;
+      cardEl.classList.remove('empty');
+      updateRemaining();
+    }
+
+    drawBtn.addEventListener('click', drawCard);
+
+    resetDeck();
+  </script>
+</body>
+</html>
