@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bollywood Dumb Charades Deck</title>
+  <title>Bollywood Charades Card Deck</title>
   <style>
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at 20% 20%, #ffe7c7, #ffe0f5 50%, #f2f7ff 100%);
-      color: #222;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #fff3e6 0%, #ffe0ef 45%, #e8f3ff 100%);
+      color: #1e1e2f;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -18,23 +18,96 @@
       padding: 20px;
     }
     .app {
-      width: min(800px, 100%);
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-      padding: 24px;
+      width: min(960px, 100%);
+      background: #ffffffd9;
+      border-radius: 24px;
+      box-shadow: 0 28px 70px rgba(0,0,0,0.12);
+      padding: 26px;
       display: grid;
       gap: 18px;
+      backdrop-filter: blur(6px);
     }
-    h1 {
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: -0.5px;
+    header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    h1 { margin: 0; font-size: 28px; letter-spacing: -0.6px; }
+    .subtitle { color: #5f6473; font-size: 14px; margin-top: 4px; }
+    .status {
+      display: inline-flex;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #f4f6fb;
+      border-radius: 12px;
+      border: 1px solid #e6e9f2;
+      font-weight: 600;
+      color: #2b3245;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .main {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+    .card {
+      position: relative;
+      border-radius: 18px;
+      padding: 30px;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #fff7ef, #ffe9dd);
+      border: 2px solid #ffc7a4;
+      box-shadow: 0 16px 40px rgba(255, 138, 0, 0.18);
+      text-align: center;
+      overflow: hidden;
+    }
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.7), transparent 40%);
+      pointer-events: none;
+    }
+    .card span {
+      font-size: 30px;
+      font-weight: 800;
+      color: #c63625;
+      line-height: 1.25;
+    }
+    .pile-area {
+      background: #f9fbff;
+      border-radius: 16px;
+      border: 1px solid #e8edf7;
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 10px 30px rgba(0,0,0,0.05);
+    }
+    .pile-title { margin: 0; font-size: 15px; color: #5c6475; font-weight: 700; }
+    .deck-stack { position: relative; width: 160px; height: 120px; margin-inline: auto; }
+    .card-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #313a5b, #1f263b);
+      border: 2px solid #546086;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f9fbff;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .card-back::before {
+      content: "🎬";
+      font-size: 30px;
+      opacity: 0.9;
     }
     .controls {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
     }
     button {
@@ -42,208 +115,74 @@
       border-radius: 12px;
       padding: 12px 16px;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      transition: transform 0.08s ease, box-shadow 0.18s ease, filter 0.1s ease;
     }
-    button:active {
-      transform: translateY(1px);
-      box-shadow: none;
-    }
-    #drawBtn {
-      background: linear-gradient(135deg, #ff8a00, #f44336);
-      color: white;
-      box-shadow: 0 12px 24px rgba(244, 67, 54, 0.25);
-    }
-    #resetBtn {
-      background: #f1f3f5;
-      color: #333;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
-    }
-    .card {
-      border: 2px dashed #f44336;
-      border-radius: 16px;
-      padding: 24px;
-      min-height: 120px;
+    button:active { transform: translateY(1px); box-shadow: none; filter: brightness(0.97); }
+    #drawBtn { background: linear-gradient(135deg, #ff7a18, #f6416c); color: white; box-shadow: 0 12px 28px rgba(246,65,108,0.35); }
+    #resetBtn { background: #f2f4f7; color: #2c3144; box-shadow: 0 10px 22px rgba(0,0,0,0.08); }
+    .pill-list {
       display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      max-height: 120px;
+      overflow-y: auto;
+      padding: 8px;
+      background: #fbfcff;
+      border-radius: 12px;
+      border: 1px solid #edf1f9;
+    }
+    .pill { background: white; padding: 8px 12px; border-radius: 10px; border: 1px solid #e8ecf5; color: #2f3243; box-shadow: 0 6px 16px rgba(0,0,0,0.06); font-weight: 600; }
+    .footer {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      background: #fff8f3;
-      text-align: center;
-    }
-    .card span {
-      font-size: 26px;
-      font-weight: 700;
-      color: #c62828;
-    }
-    .pile {
-      display: grid;
       gap: 10px;
-      max-height: 240px;
-      overflow: auto;
-      padding: 10px;
-      border: 1px solid #ececec;
-      border-radius: 10px;
-      background: #fafafa;
+      flex-wrap: wrap;
+      color: #6b7185;
+      font-size: 13px;
     }
-    .pile h3 {
-      margin: 0;
-      font-size: 16px;
-      color: #666;
-      font-weight: 700;
-    }
-    .pill {
-      display: inline-block;
-      background: #fff;
-      border: 1px solid #eee;
-      color: #444;
-      padding: 8px 10px;
-      border-radius: 10px;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.05);
-    }
-    .row { display: grid; gap: 12px; }
-    .row.two { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-    .status { color: #777; font-size: 14px; }
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="row">
-      <h1>Bollywood Dumb Charades Deck</h1>
-      <div class="status" id="status">Remaining: 0</div>
-      <div class="controls">
-        <button id="drawBtn">Draw a Card</button>
-        <button id="resetBtn">Reset Deck</button>
+    <header>
+      <div>
+        <h1>Bollywood Charades Card Deck</h1>
+        <div class="subtitle">Draw a movie card for your next dumb charades round.</div>
+      </div>
+      <div class="status" id="status">Deck ready</div>
+    </header>
+
+    <div class="main">
+      <div class="card" id="card">
+        <span>Tap "Draw a Card" to begin!</span>
+      </div>
+      <div class="pile-area">
+        <h3 class="pile-title">Deck (face down)</h3>
+        <div class="deck-stack" id="deckStack"></div>
+        <div class="controls">
+          <button id="drawBtn">Draw a Card</button>
+          <button id="resetBtn">Reset Deck</button>
+        </div>
       </div>
     </div>
-    <div class="card" id="card">
-      <span>Click "Draw a Card" to start!</span>
+
+    <div class="pile-area">
+      <h3 class="pile-title">Drawn Cards</h3>
+      <div class="pill-list" id="drawnList"></div>
     </div>
-    <div class="row two">
-      <div class="pile">
-        <h3>Drawn Cards</h3>
-        <div id="drawnList"></div>
-      </div>
-      <div class="pile">
-        <h3>Remaining Cards (peek)</h3>
-        <div id="remainingList"></div>
-      </div>
+
+    <div class="footer">
+      <div>Keep cards secret: only the top card is revealed when drawn.</div>
+      <div id="counts"></div>
     </div>
   </div>
 
   <script>
     const allMovies = [
-      "3 Idiots",
-      "Dangal",
-      "Lagaan",
-      "Dilwale Dulhania Le Jayenge",
-      "Kabhi Khushi Kabhie Gham",
-      "Zindagi Na Milegi Dobara",
-      "Andaz Apna Apna",
-      "Gully Boy",
-      "Barfi!",
-      "Queen",
-      "PK",
-      "Taare Zameen Par",
-      "Swades",
-      "Jab We Met",
-      "Chak De! India",
-      "Munna Bhai M.B.B.S.",
-      "Sanju",
-      "Wake Up Sid",
-      "Rockstar",
-      "Yeh Jawaani Hai Deewani",
-      "Bajirao Mastani",
-      "Padmaavat",
-      "Dil Chahta Hai",
-      "Kaho Naa... Pyaar Hai",
-      "Hum Aapke Hain Koun..!",
-      "Hum Saath-Saath Hain",
-      "Kabir Singh",
-      "Haider",
-      "Omkara",
-      "Devdas",
-      "Kal Ho Naa Ho",
-      "Guru",
-      "Tanhaji",
-      "Drishyam",
-      "Stree",
-      "Article 15",
-      "Piku",
-      "Kahaani",
-      "Badhaai Ho",
-      "Pink",
-      "Udaan",
-      "Masaan",
-      "Lootera",
-      "Bhool Bhulaiyaa",
-      "Hera Pheri",
-      "Chupke Chupke",
-      "Gol Maal (1979)",
-      "Koi... Mil Gaya",
-      "Krrish",
-      "Dhoom",
-      "Dhoom 2",
-      "Dhoom 3",
-      "Kabhi Alvida Naa Kehna",
-      "Student of the Year",
-      "Chennai Express",
-      "Raazi",
-      "URI: The Surgical Strike",
-      "Barfi!",
-      "Don (2006)",
-      "Don 2",
-      "War",
-      "Pathaan",
-      "Jawan",
-      "Gadar: Ek Prem Katha",
-      "Gadar 2",
-      "Koi Mere Dil Se Pooche",
-      "Veer-Zaara",
-      "Rang De Basanti",
-      "Oye Lucky! Lucky Oye!",
-      "Special 26",
-      "A Wednesday!",
-      "Holiday",
-      "Bhool Bhulaiyaa 2",
-      "Andhadhun",
-      "The Lunchbox",
-      "Neerja",
-      "Talvar",
-      "Airlift",
-      "Parineeta",
-      "R... Rajkumar",
-      "Kaminey",
-      "Barfi!",
-      "Tanu Weds Manu",
-      "Tanu Weds Manu Returns",
-      "Raanjhanaa",
-      "Bhaag Milkha Bhaag",
-      "MS Dhoni: The Untold Story",
-      "Chhichhore",
-      "Kai Po Che!",
-      "Super 30",
-      "Bajrangi Bhaijaan",
-      "Sultan",
-      "Ek Tha Tiger",
-      "Tiger Zinda Hai",
-      "Band Baaja Baaraat",
-      "Rab Ne Bana Di Jodi",
-      "Hum Dil De Chuke Sanam",
-      "Saathiya",
-      "Tamasha",
-      "Rock On!!",
-      "Kabhi Haan Kabhi Naa",
-      "Dil To Pagal Hai",
-      "Mohabbatein",
-      "Veer-Zaara",
-      "Fan",
-      "Zero",
-      "Phir Hera Pheri",
-      "Welcome",
-      "Welcome Back",
-      "Dhamaal",
-      "Total Dhamaal"
+      "3 Idiots","Dangal","Lagaan","Dilwale Dulhania Le Jayenge","Kabhi Khushi Kabhie Gham","Zindagi Na Milegi Dobara","Andaz Apna Apna","Gully Boy","Barfi!","Queen","PK","Taare Zameen Par","Swades","Jab We Met","Chak De! India","Munna Bhai M.B.B.S.","Sanju","Wake Up Sid","Rockstar","Yeh Jawaani Hai Deewani","Bajirao Mastani","Padmaavat","Dil Chahta Hai","Kaho Naa... Pyaar Hai","Hum Aapke Hain Koun..!","Hum Saath-Saath Hain","Kabir Singh","Haider","Omkara","Devdas","Kal Ho Naa Ho","Guru","Tanhaji","Drishyam","Stree","Article 15","Piku","Kahaani","Badhaai Ho","Pink","Udaan","Masaan","Lootera","Bhool Bhulaiyaa","Hera Pheri","Chupke Chupke","Gol Maal (1979)","Koi... Mil Gaya","Krrish","Dhoom","Dhoom 2","Dhoom 3","Kabhi Alvida Naa Kehna","Student of the Year","Chennai Express","Raazi","URI: The Surgical Strike","Don (2006)","Don 2","War","Pathaan","Jawan","Gadar: Ek Prem Katha","Gadar 2","Koi Mere Dil Se Pooche","Veer-Zaara","Rang De Basanti","Oye Lucky! Lucky Oye!","Special 26","A Wednesday!","Holiday","Bhool Bhulaiyaa 2","Andhadhun","The Lunchbox","Neerja","Talvar","Airlift","Parineeta","R... Rajkumar","Kaminey","Tanu Weds Manu","Tanu Weds Manu Returns","Raanjhanaa","Bhaag Milkha Bhaag","MS Dhoni: The Untold Story","Chhichhore","Kai Po Che!","Super 30","Bajrangi Bhaijaan","Sultan","Ek Tha Tiger","Tiger Zinda Hai","Band Baaja Baaraat","Rab Ne Bana Di Jodi","Hum Dil De Chuke Sanam","Saathiya","Tamasha","Rock On!!","Kabhi Haan Kabhi Naa","Dil To Pagal Hai","Mohabbatein","Fan","Zero","Phir Hera Pheri","Welcome","Welcome Back","Dhamaal","Total Dhamaal"
     ];
 
     let deck = [];
@@ -252,7 +191,8 @@
     const cardEl = document.getElementById('card');
     const statusEl = document.getElementById('status');
     const drawnListEl = document.getElementById('drawnList');
-    const remainingListEl = document.getElementById('remainingList');
+    const deckStackEl = document.getElementById('deckStack');
+    const countsEl = document.getElementById('counts');
     const drawBtn = document.getElementById('drawBtn');
     const resetBtn = document.getElementById('resetBtn');
 
@@ -264,16 +204,39 @@
       return array;
     }
 
+    function renderDeckStack() {
+      deckStackEl.innerHTML = '';
+      const show = Math.min(deck.length, 5);
+      for (let i = 0; i < show; i++) {
+        const cardBack = document.createElement('div');
+        cardBack.className = 'card-back';
+        cardBack.style.transform = `translate(${i * 6}px, ${-i * 3}px)`;
+        cardBack.style.zIndex = i + 1;
+        deckStackEl.appendChild(cardBack);
+      }
+      const counter = document.createElement('div');
+      counter.style.position = 'absolute';
+      counter.style.right = '-12px';
+      counter.style.bottom = '-12px';
+      counter.style.background = '#ff7a18';
+      counter.style.color = 'white';
+      counter.style.padding = '8px 12px';
+      counter.style.borderRadius = '16px';
+      counter.style.boxShadow = '0 10px 20px rgba(255,122,24,0.35)';
+      counter.style.fontWeight = '800';
+      counter.textContent = deck.length;
+      deckStackEl.appendChild(counter);
+    }
+
     function updateUI() {
-      statusEl.textContent = `Remaining: ${deck.length}`;
+      statusEl.textContent = deck.length ? `Cards remaining: ${deck.length}` : 'Deck empty';
+      countsEl.textContent = `Drawn: ${drawn.length} | Remaining: ${deck.length}`;
 
       drawnListEl.innerHTML = drawn.length
-        ? drawn.map((m, idx) => `<div class="pill">${drawn.length - idx}. ${m}</div>`).join('')
-        : '<div class="status">No cards drawn yet.</div>';
+        ? drawn.map((m, idx) => `<div class="pill">${idx + 1}. ${m}</div>`).join('')
+        : '<div class="pill" style="opacity:0.7;">No cards drawn yet.</div>';
 
-      remainingListEl.innerHTML = deck.length
-        ? deck.map((m, idx) => `<div class="pill">${idx + 1}. ${m}</div>`).join('')
-        : '<div class="status">No cards remaining.</div>';
+      renderDeckStack();
     }
 
     function drawCard() {
@@ -290,14 +253,13 @@
     function resetDeck() {
       deck = shuffle([...allMovies]);
       drawn = [];
-      cardEl.innerHTML = '<span>Deck shuffled. Ready to play!</span>';
+      cardEl.innerHTML = '<span>Deck shuffled. Ready to draw!</span>';
       updateUI();
     }
 
     drawBtn.addEventListener('click', drawCard);
     resetBtn.addEventListener('click', resetDeck);
 
-    // initialize
     resetDeck();
   </script>
 </body>
