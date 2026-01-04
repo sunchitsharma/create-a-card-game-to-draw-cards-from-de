@@ -9,7 +9,7 @@
     body {
       margin: 0;
       font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #fff3e6 0%, #ffe0ef 45%, #e8f3ff 100%);
+      background: linear-gradient(135deg, #ffe4e1, #f5c1d3 50%, #dbf2f7 100%);
       color: #1e1e2f;
       display: flex;
       justify-content: center;
@@ -28,8 +28,8 @@
       backdrop-filter: blur(6px);
     }
     header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-    h1 { margin: 0; font-size: 28px; letter-spacing: -0.6px; }
-    .subtitle { color: #5f6473; font-size: 14px; margin-top: 4px; }
+    h1 { margin: 0; font-size: 28px; letter-spacing: -0.6px; color: #d32f2f; text-align: center; }
+    .subtitle { color: #5f6473; font-size: 14px; margin-top: 4px; text-align: center; }
     .status {
       display: inline-flex;
       gap: 8px;
@@ -55,7 +55,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(145deg, #fff7ef, #ffe9dd);
+      background: linear-gradient(145deg, #ffe4e1, #f5c1d3);
       border: 2px solid #ffc7a4;
       box-shadow: 0 16px 40px rgba(255, 138, 0, 0.18);
       text-align: center;
@@ -73,6 +73,7 @@
       font-weight: 800;
       color: #c63625;
       line-height: 1.25;
+      font-family: 'Bollywood', sans-serif;
     }
     .pile-area {
       background: #f9fbff;
@@ -143,6 +144,16 @@
       color: #6b7185;
       font-size: 13px;
     }
+    .famous-photo {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .famous-photo img {
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
   </style>
 </head>
 <body>
@@ -174,6 +185,10 @@
       <div class="pill-list" id="drawnList"></div>
     </div>
 
+    <div class="famous-photo" id="famousPhoto">
+      <img src="https://example.com/path-to-famous-photo.jpg" alt="Famous Bollywood Movie Photo" />
+    </div>
+
     <div class="footer">
       <div>Keep cards secret: only the top card is revealed when drawn.</div>
       <div id="counts"></div>
@@ -189,6 +204,7 @@
     let drawn = [];
 
     const cardEl = document.getElementById('card');
+    const famousPhotoEl = document.getElementById('famousPhoto');
     const statusEl = document.getElementById('status');
     const drawnListEl = document.getElementById('drawnList');
     const deckStackEl = document.getElementById('deckStack');
@@ -237,6 +253,13 @@
         : '<div class="pill" style="opacity:0.7;">No cards drawn yet.</div>';
 
       renderDeckStack();
+
+      // Show famous photo if a card is drawn
+      if (drawn.length > 0) {
+        famousPhotoEl.style.display = 'block';
+      } else {
+        famousPhotoEl.style.display = 'none';
+      }
     }
 
     function drawCard() {
